@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Deliberately a standard, installable WordPress plugin (not a must-use plugin).
-final class WP2Shell-Vax {
+final class WP2Shell_Vax {
     const VERSION   = '1.0.0';
     const CRON_HOOK = 'wp2shell-vax_daily_cleanup';
     const TABLE_OPT = 'wp2shell-vax_table_ready';
@@ -313,9 +313,9 @@ final class WP2Shell-Vax {
         echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
         wp_nonce_field( 'wp2shell-vax_save' );
         echo '<input type="hidden" name="action" value="wp2shell-vax_save">';
-        echo '<p><label><input type="checkbox" name="strict" value="1" ' . checked( $strict, true, false ) . '> Strict mode: block ALL batch requests, including authenticated ones (may break the editor/integrations).</label></p>';
-        echo '<p><label><input type="checkbox" name="logging" value="1" ' . checked( $logging, true, false ) . '> Store blocked REMOTE_ADDR IPs (optional; up to 500 IPs, 30 days, approximately 20 samples/hour globally).</label></p>';
-        echo '<p><small>Default: anonymous batch requests blocked, authenticated allowed; IP logging off. Reverse-proxy IPs may be shown instead of client IPs. Denied requests are not proof of a successful attack.</small></p>';
+        echo '<p><label><input type="checkbox" name="strict" value="1" ' . checked( $strict, true, false ) . '> Strict mode: block ALL batch requests, including authenticated ones (may break the admin dashboard). </label></p>';
+        echo '<p><label><input type="checkbox" name="logging" value="1" ' . checked( $logging, true, false ) . '> Store blocked REMOTE_ADDR IPs (optional; up to 500 IPs, 30 days, approximately 20 samples/hour max). </label></p>';
+        echo '<p><small>Default: anonymous batch requests blocked, authenticated allowed; IP logging off. Reverse-proxy IPs may be shown instead of client IPs. Denied requests are not proof of a compromise.</small></p>';
         submit_button( 'Save settings' );
         echo '</form>';
         echo '<h2>Recent blocked IPs</h2>';
@@ -340,11 +340,11 @@ final class WP2Shell-Vax {
             submit_button( 'Delete all IP logs now', 'secondary' );
             echo '</form>';
         }
-        echo '<p><strong>Important:</strong> logs are automatically erased when this plugin is deactivated, including automatic deactivation after patching. Removing the plugin via Delete removes its table entirely.</p>';
+        echo '<p><strong>Important:</strong> logs are automatically erased when this plugin is deactivated, including automatic deactivation after patching. Removing the plugin via Delete removes all stored logs as part of WordPress cleanup.</p>';
         echo '</div>';
     }
 }
 
-WP2Shell-Vax::boot();
-register_activation_hook( __FILE__, array( 'WP2Shell-Vax', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'WP2Shell-Vax', 'deactivate' ) );
+WP2Shell_Vax::boot();
+register_activation_hook( __FILE__, array( 'WP2Shell_Vax', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'WP2Shell_Vax', 'deactivate' ) );
